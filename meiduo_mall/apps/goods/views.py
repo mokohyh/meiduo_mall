@@ -38,14 +38,14 @@ class ListView(View):
 
         # 热销排行：通过另外一个视图实现
         # 查询当前页的商品数据
-        # 1.查询指定分类的数据
+        # 1. 查询指定分类的数据
         skus = SKU.objects.filter(category_id=category_id, is_launched=True).order_by(sort_field)
-        # 2.分页
-        # 2.1创建分页对象，指定列表、页大小
+        # 2. 分页
+        # 2.1 创建分页对象，指定列表、页大小
         paginator = Paginator(skus, constants.SKU_LIST_PER_PAGE)
-        # 2.2获取指定页码的数据
+        # 2.2 获取指定页码的数据
         page_skus = paginator.page(page_num)
-        # 2.3获取总页数
+        # 2.3 获取总页数
         total_page = paginator.num_pages
 
         context = {

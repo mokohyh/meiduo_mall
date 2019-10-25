@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^meiduo_admin/', admin.site.urls),
     url(r'^', include('users.urls',namespace='users')),
     url('^', include('verifycations.urls')),
     url('^', include('contents.urls')),
@@ -28,6 +28,6 @@ urlpatterns = [
     url('^', include('carts.urls',namespace='carts')),
     url('^', include('orders.urls')),
     url('^', include('payments.urls')),
+    url('^meiduo_admin/', include('meiduo_admin.urls')),
     # url('^meiduo_admin/', include('meiduo_admin.urls')),
-
 ]

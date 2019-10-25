@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 指定应用的导包路径为meiduo_mall/apps
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+print(sys.path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -40,6 +41,7 @@ ALLOWED_HOSTS = [
     'www.meiduo.site',
     '127.0.0.1',
 ]
+
 
 # Application definition
 
@@ -62,10 +64,15 @@ INSTALLED_APPS = [
     'carts.apps.CartsConfig',
     'orders.apps.OrdersConfig',
     'payments.apps.PaymentsConfig',
-
+    # 同源策略
+    'corsheaders',
     # 'haystack',
     'django_crontab',  # 定时任务
+    'meiduo_admin',
 ]
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -79,6 +86,19 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'meiduo_mall.urls'
+
+
+
+# CORS
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    'localhost:8080',
+    'www.meiduo.site:8080',
+    'api.meiduo.site:8000'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+
 
 TEMPLATES = [
     {
@@ -314,3 +334,29 @@ CRONJOBS = [
      '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
 ]
 CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'  # 支持中文
+
+
+# token验证
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# token的有效期
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}
+
+# JWT配置
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'meiduo_mall.utils.jwt_response.jwt_response_payload_handler',
+}
+
+
+# 配置FastDFS配置文件信息
+Fdfs_config_path = os.path.join(os.path.dirname(BASE_DIR), 'meiduo_mall/utils/fdfs/client.conf')
+print(Fdfs_config_path)
