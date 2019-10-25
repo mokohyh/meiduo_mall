@@ -7,4 +7,4 @@ class OrderInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderInfo
-        feilds = "__all__"
+        fields = "__all__"
