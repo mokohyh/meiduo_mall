@@ -3,6 +3,7 @@ from django.conf.urls import url
 
 from meiduo_admin.view.images_view import ImagesView
 from meiduo_admin.view.orders_view import OrderInfoView
+from meiduo_admin.view.permission_view import PermissionView
 from meiduo_admin.view.skus_view import SKUCategorieView, SKUGoodsView
 from meiduo_admin.view.specs_view import SpecsView
 from meiduo_admin.view.statistics_view import UserTotalCountView, UserDayCountView, UserActiveCountView, \
@@ -35,6 +36,10 @@ urlpatterns = [
     ################# 图片信息
     url(r'^skus/simple/$', ImagesView.as_view({'get':'simple'})),
 
+    ################# 权限路由信息
+    url(r'^permission/content_types/$', PermissionView.as_view({'get':'content_types'})),
+
+
 ]
 
 ################ 规格路由
@@ -57,4 +62,10 @@ urlpatterns += route.urls
 ##############  订单路由
 route = DefaultRouter()
 route.register('orders', OrderInfoView, base_name='orders')
+urlpatterns += route.urls
+
+
+##############  权限路由
+route = DefaultRouter()
+route.register('permission/perms', PermissionView, base_name='permission')
 urlpatterns += route.urls
