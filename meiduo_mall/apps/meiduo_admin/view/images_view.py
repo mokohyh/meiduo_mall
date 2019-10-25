@@ -29,6 +29,11 @@ class ImagesView(ModelViewSet):
     # 重写create方法
     def create(self,request, *args, **kwargs):
         '''保存图片'''
+
+        # 获取前端数据
+        data = request.data
+        ser = self.get_serializer(data=data)
+        ser.is_valid()
         # 获取前端的信息，图片
         image = request.FILES.get('image')
         # 创建连接对象,导入fdfs的配置文件
@@ -40,11 +45,11 @@ class ImagesView(ModelViewSet):
             return http.HttpResponseBadRequest('上传失败')
         # 获取上传后路径
         image_url = ret['Remote file_id']
-        # 获取sku_id
-        sku_id = int(request.data.get('sku')[0])
+        # # 获取sku_id
+        # sku_id = int(request.data.get('sku')[0])
+        # sku = ser.validated_data['sku']
         # 保存路径到图片表中
-        sku = SKU.objects.get(id=sku_id)
-        img = SKUImage.objects.create(sku=sku, image=image_url)
+        img = SKUImage.objects.create(sku=ser.validated_data['sku'], image=image_url)
 
         # 生成新的详情页页面
         get_detail_html.delay(img.sku.id)
@@ -52,7 +57,7 @@ class ImagesView(ModelViewSet):
         return Response(
             {
                 'id': img.id,
-                'sku': sku_id,
+                'sku': img.sku_id,
                 'image': img.image.url
             },
             status=201  # 前端需要接受201状态
