@@ -43,6 +43,32 @@ class ImageSeriazlier(serializers.ModelSerializer):
         return img
 
 
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        # 获取前端的信息，图片
+        image = request.FILES.get('image')
+        # 创建连接对象,导入fdfs的配置文件
+        client = Fdfs_client(Fdfs_config_path)
+        # 向fastdfs系统上传图片
+        ret = client.upload_by_buffer((image.read()))
+        # 判断是否上传成功
+        if ret['Status'] != 'Upload successed.':
+            raise serializers.ValidationError({'error': '图片上传失败'})
+        # 获取上传后路径
+        image_url = ret['Remote file_id']
+        # # 获取sku_id
+        # sku_id = int(request.data.get('sku')[0])
+        # sku = ser.validated_data['sku']
+        # 更新操作图片表中
+        instance.image=image_url
+        instance.save()
+
+        # 生成新的详情页页面
+        get_detail_html.delay(instance.sku.id)
+
+        return instance
+
+
 
 class SKUSeriazlier(serializers.ModelSerializer):
     '''返回sku的id和name'''
