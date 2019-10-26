@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 from meiduo_admin.view.images_view import ImagesView
 from meiduo_admin.view.orders_view import OrderInfoView
-from meiduo_admin.view.permission_view import PermissionView
+from meiduo_admin.view.permission_view import PermissionView, GroupView
 from meiduo_admin.view.skus_view import SKUCategorieView, SKUGoodsView
 from meiduo_admin.view.specs_view import SpecsView
 from meiduo_admin.view.statistics_view import UserTotalCountView, UserDayCountView, UserActiveCountView, \
@@ -39,6 +39,9 @@ urlpatterns = [
     ################# 权限路由信息
     url(r'^permission/content_types/$', PermissionView.as_view({'get':'content_types'})),
 
+    #
+    url(r'^permission/simple/$', GroupView.as_view({'get':'simple'})),
+
 
 ]
 
@@ -67,5 +70,10 @@ urlpatterns += route.urls
 
 ##############  权限路由
 route = DefaultRouter()
-route.register('permission/perms', PermissionView, base_name='permission')
+route.register('permission/perms', PermissionView, base_name='perms')
+urlpatterns += route.urls
+
+##############  添加用户组
+route = DefaultRouter()
+route.register('permission/groups', GroupView, base_name='groups')
 urlpatterns += route.urls
